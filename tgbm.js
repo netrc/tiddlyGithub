@@ -1,5 +1,5 @@
-const GH_USER = "netrc";
-const GH_PAT = "5512d1c39c14828d9ce93abe5f90ac842f9ee948";
+const GH_USER = "YOUR_GITHUB_USER_NAME";
+const GH_PAT = "GITHUB_GENERATED_PAT";
 const contentsUrl = `https://api.github.com/repos/${GH_USER}/tiddly/contents/`;
 const contentsOpts = { 
     headers: { 
