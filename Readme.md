@@ -22,7 +22,9 @@ Click on the bookmarklet bookmark/button.
 * go to https://github.com and login
 * Under your user icon, select Settings, then Developer Settings
 * In the Personal Authentication Token page, Create a new token
-* Once created, immediately copy this somewhere - the text of the PAT needs to be copied in to the GitHub save settings and the bookmarklet
+** any name
+** *You must select the 'repo' scope (permission)*  (i've forgotten to do this more than i care to admit)
+* Once created, immediately copy this string somewhere - the text of the PAT needs to be copied in to the GitHub save settings and the bookmarklet
 * Note that once you refresh the page, you aren't allowed to see the PAT clear-text. However, it is trivial to make new PATs as needed (and delete old PATS that aren't needed).
 
 ### Bookmarklet
