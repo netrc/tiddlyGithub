@@ -15,7 +15,10 @@
     }
     body, html {
       font-family: sans-serif;
-      color: #99BBBB;
+      color: #9BB;
+    }
+    a:link, a:visited {
+      color: #ACC;
     }
   </style>
 </head>
@@ -25,12 +28,16 @@
   <h2> tiddlyGithub </h2>
   </p>
   <table>
-    <tr>
-      <td> username </td>  <td> <input id='username' autofocus> </td>
-      <td> repo name </td>  <td> <input id='reponame'> </td>
-      <td> PAT </td>  <td> <input id='PAT'> </td>
-      <td> <button  onclick="saveAndGo()"> save </button> </td>
+    <tr> 
+      <td> username </td>  
+      <td> repo name </td>  
+      <td> personal auth token </td>  
     </tr>
+    <tr> 
+      <td> <input id='username' autofocus placeholder="username"> </td> 
+      <td> <input id='reponame' placeholder="repo name"> </td> 
+      <td> <input id='PAT' placeholder="PAT"> </td>  
+      <td> &nbsp; &nbsp; <button  onclick="saveAndGo()"> save </button> </td> </tr>
   </table>  
   <hr>
   <div id="gtConsole">
@@ -50,7 +57,7 @@
         } );
         doLoadWiki(g); 
       } else {
-        gtConsole('// no local storage vals');
+        //gtConsole('no local storage vals');
       }
   }
   
