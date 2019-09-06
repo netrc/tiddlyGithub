@@ -47,45 +47,37 @@
 <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
   <script content="text/javascript">
   // TODO add warn element to show warnings; auto clear after 4 seconds
-  var gtConsoleEl;
-  var gtVal;
   const gtItemName = "gtVal";
+  const pNames = [ 'username', 'reponame', 'PAT' ];
 
   function initPage(){
-      gtConsoleEl = document.getElementById("gtConsole");
-      gtVal = JSON.parse(localStorage.getItem(gtItemName));
-      if (gtVal) {
-        //gtConsole(`got local storage: ${gtVal.username} ${gtVal.reponame} ${gtVal.PAT}`)
-        document.getElementById("username").value = gtVal.username;
-        document.getElementById("reponame").value = gtVal.reponame;
-        document.getElementById("PAT").value = gtVal.PAT;
-        doLoad(gtVal.username, gtVal.reponame, gtVal.PAT); 
+      let g = JSON.parse(localStorage.getItem(gtItemName));
+      if (g) {
+        //gtConsole(`got local storage: ${g.username} ${g.reponame} ${g.PAT}`)
+        pNames.forEach( p => {  // load up the GUI username, etc
+          document.getElementById(p).value = g[p];
+        } );
+        doLoadWiki(g); 
       } else {
-        gtConsole('no local storage vals');
+        gtConsole('// no local storage vals');
       }
   }
   
   function saveAndGo() {
     console.log('saveAndGo');
     //gtConsole('starting');
-    let username = document.getElementById("username").value;
-    let reponame = document.getElementById("reponame").value;
-    let PAT = document.getElementById("PAT").value;
-    if (!username || username==="") {
-      gtConsole('please enter user name');
-      return;
-    }
-    if (!reponame || reponame==="") {
-      gtConsole('please enter repo name');
-      return;
-    }
-    if (!PAT || PAT==="") {
-      gtConsole('please enter PAT');
-      return;
-    }
-    gtConsole(`saving ${username}/${reponame}`);
-    localStorage.setItem(gtItemName, JSON.stringify( {username: username, reponame: reponame, PAT: PAT} ) );
-    doLoad(username, reponame, PAT);
+    let g = {};
+    pNames.forEach( p => { // get the GUI username, etc
+      let i = document.getElementById(p).value;
+      if (!i || i==="") {
+        gtConsole(`please enter ${p}`);
+        return; // short-circuit return
+      }
+      g[p] = i;
+    } );
+    gtConsole(`saving ${g['username']}/${g['reponame']}`);
+    localStorage.setItem(gtItemName, JSON.stringify( g ) );
+    doLoadWiki(g);
   }
 
   function doRequest(url, opts) {
@@ -106,16 +98,16 @@
     });
   }
 
-  function doLoad( username, reponame, PAT ) {
-    const contentsUrl = `https://api.github.com/repos/${username}/${reponame}/contents/`;
+  function doLoadWiki( g ) {
+    const contentsUrl = `https://api.github.com/repos/${g['username']}/${g['reponame']}/contents/`;
     const contentsOpts = {
       headers: {
         'User-Agent': 'tiddly',
-        'Authorization': 'Basic ' + btoa(`${username}:${PAT}`),
+        'Authorization': 'Basic ' + btoa(`${g['username']}:${g['PAT']}`),
         'Accept': 'application/json'
       }
     };
-    gtConsole(`doLoad for ${username}...${contentsUrl}`);
+    gtConsole(`doLoadWiki for ${g['username']}...${contentsUrl}`);
     doRequest(contentsUrl, contentsOpts).then( rawData => {
       const contents = JSON.parse(rawData);
       //gtConsole(`contents: ${rawData}`);
@@ -134,18 +126,19 @@
         document.close();
         document.open();
         document.write(bodyHTML);
-    }) // TODO catch
-
+      }) // TODO catch
     }).catch( err => {
       gtConsole(`some error with the contents fetch`);
     });
   }
 
+  var gtConsoleEl;
   function gtConsole( str ) {
+    gtConsoleEl = gtConsoleEl || document.getElementById("gtConsole");  // really one time init
     gtConsoleEl.innerHTML += `<p> ${(new Date()).toISOString().slice(11,23)} ${str} </p>`;
-    //gtConsoleEl.innerHTML = "foo";
   }
 
+  // actual main entry point
   if (document.readyState == 'loading') {  // loading yet, wait for the event
     document.addEventListener('DOMContentLoaded', initPage);
   } else {  // DOM is ready!
