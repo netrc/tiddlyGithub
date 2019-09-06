@@ -46,6 +46,7 @@
   
 <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
   <script content="text/javascript">
+  // TODO add warn element to show warnings; auto clear after 4 seconds
   var gtConsoleEl;
   var gtVal;
   const gtItemName = "gtVal";
@@ -54,7 +55,7 @@
       gtConsoleEl = document.getElementById("gtConsole");
       gtVal = JSON.parse(localStorage.getItem(gtItemName));
       if (gtVal) {
-        gtConsole(`got local storage: ${gtVal.username} ${gtVal.reponame} ${gtVal.PAT}`)
+        //gtConsole(`got local storage: ${gtVal.username} ${gtVal.reponame} ${gtVal.PAT}`)
         document.getElementById("username").value = gtVal.username;
         document.getElementById("reponame").value = gtVal.reponame;
         document.getElementById("PAT").value = gtVal.PAT;
@@ -66,7 +67,7 @@
   
   function saveAndGo() {
     console.log('saveAndGo');
-    gtConsole('starting');
+    //gtConsole('starting');
     let username = document.getElementById("username").value;
     let reponame = document.getElementById("reponame").value;
     let PAT = document.getElementById("PAT").value;
@@ -87,8 +88,57 @@
     doLoad(username, reponame, PAT);
   }
 
+  function doRequest(url, opts) {
+    return new Promise ( (resolve, reject) => {
+      console.log(`dr: fetch ${url}`);
+      fetch(url, opts).then( response => {
+        if (response.status !== 200) {
+          gtConsole(`fetch problem ... Status Code: ${response.status}`);
+          reject(`fetch problem ... Status Code: ${response.status}`);
+        }
+        response.text().then( data => {
+          resolve(data);
+        });
+      }).catch( err => {
+        gtConsole(`other Fetch Error ${err}`);
+        reject(`Fetch Error ${err}`);
+      });
+    });
+  }
+
   function doLoad( username, reponame, PAT ) {
-    gtConsole(`doLoad for ${username}`)
+    const contentsUrl = `https://api.github.com/repos/${username}/${reponame}/contents/`;
+    const contentsOpts = {
+      headers: {
+        'User-Agent': 'tiddly',
+        'Authorization': 'Basic ' + btoa(`${username}:${PAT}`),
+        'Accept': 'application/json'
+      }
+    };
+    gtConsole(`doLoad for ${username}...${contentsUrl}`);
+    doRequest(contentsUrl, contentsOpts).then( rawData => {
+      const contents = JSON.parse(rawData);
+      //gtConsole(`contents: ${rawData}`);
+      const indexInfo = contents.find( f => f.name==="index.html" );
+      if (!indexInfo) {
+        gtConsole('failed to find index.html');
+        return;
+      }
+      gtConsole(`found index.html size: ${indexInfo.size} sha: ${indexInfo.sha}`);
+      doRequest(indexInfo.git_url, contentsOpts).then( rawData => {
+        gtConsole(`...got raw response t: ${typeof(rawData)} length: ${rawData.length}  ${rawData.slice(0,32)}`);
+        const indexObj = JSON.parse(rawData);
+        gtConsole(`...got response object...`);
+        const bodyHTML = atob(indexObj.content);
+        gtConsole(`...body html ${bodyHTML.length}  ... ${bodyHTML.slice(0,48)}`);
+        document.close();
+        document.open();
+        document.write(bodyHTML);
+    }) // TODO catch
+
+    }).catch( err => {
+      gtConsole(`some error with the contents fetch`);
+    });
   }
 
   function gtConsole( str ) {
