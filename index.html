@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+
+        <head>
+  <meta charset="utf-8">
+  <meta name="description" content="simple description">
+  <meta name="author" content="netrc">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Simple title </title>
+
+  <meta name="author" content="netrc">
+
+  <style type="text/css">
+    body {
+        background: #446655; /* fallback for old browsers */
+        background: #16222A; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to left, #16222A , #3A6073); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to left, #16222A , #3A6073); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+*/
+    }
+    body, html {
+      font-family: sans-serif;
+      color: #99BBBB;
+    }
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+
+<body>
+
+  <h2> githubTiddly </h2>
+  </p>
+  <table>
+    <tr>
+      <td> username </td>  <td> <input id='username' autofocus> </td>
+      <td> repo name </td>  <td> <input id='reponame'> </td>
+      <td> PAT </td>  <td> <input id='PAT'> </td>
+      <td> <button  onclick="saveAndGo()"> save </button> </td>
+    </tr>
+  </table>  
+  <hr>
+  <div id="gtConsole">
+
+  </div>
+  
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+  <script content="text/javascript">
+  var gtConsoleEl;
+  var gtVal;
+  const gtItemName = "gtVal";
+
+  function initPage(){
+      gtConsoleEl = document.getElementById("gtConsole");
+      gtVal = JSON.parse(localStorage.getItem(gtItemName));
+      if (gtVal) {
+        gtConsole(`got local storage: ${gtVal.username} ${gtVal.reponame} ${gtVal.PAT}`)
+        document.getElementById("username").value = gtVal.username;
+        document.getElementById("reponame").value = gtVal.reponame;
+        document.getElementById("PAT").value = gtVal.PAT;
+        doLoad(gtVal.username, gtVal.reponame, gtVal.PAT); 
+      } else {
+        gtConsole('no local storage vals');
+      }
+  }
+  
+  function saveAndGo() {
+    console.log('saveAndGo');
+    gtConsole('starting');
+    let username = document.getElementById("username").value;
+    let reponame = document.getElementById("reponame").value;
+    let PAT = document.getElementById("PAT").value;
+    if (!username || username==="") {
+      gtConsole('please enter user name');
+      return;
+    }
+    if (!reponame || reponame==="") {
+      gtConsole('please enter repo name');
+      return;
+    }
+    if (!PAT || PAT==="") {
+      gtConsole('please enter PAT');
+      return;
+    }
+    gtConsole(`saving ${username}/${reponame}`);
+    localStorage.setItem(gtItemName, JSON.stringify( {username: username, reponame: reponame, PAT: PAT} ) );
+    doLoad(username, reponame, PAT);
+  }
+
+  function doLoad( username, reponame, PAT ) {
+    gtConsole(`doLoad for ${username}`)
+  }
+
+  function gtConsole( str ) {
+    gtConsoleEl.innerHTML += `<p> ${(new Date()).toISOString().slice(11,23)} ${str} </p>`;
+    //gtConsoleEl.innerHTML = "foo";
+  }
+
+  if (document.readyState == 'loading') {  // loading yet, wait for the event
+    document.addEventListener('DOMContentLoaded', initPage);
+  } else {  // DOM is ready!
+   initPage();
+  }
+</script>  
+</body>
+</html>
+  
