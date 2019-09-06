@@ -1,21 +1,16 @@
 <!DOCTYPE HTML>
 <html>
 
-        <head>
-  <meta charset="utf-8">
-  <meta name="description" content="simple description">
+<head>
+  <meta http-equiv=”Content-Type” content=”text/html; charset=utf-8″ />
+  <meta name="description" content="tiddlyWiki w/ Github">
   <meta name="author" content="netrc">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>Simple title </title>
-
-  <meta name="author" content="netrc">
+  <title> tiddlyGithub </title>
 
   <style type="text/css">
     body {
         background: #446655; /* fallback for old browsers */
-        background: #16222A; /* fallback for old browsers */
-        background: -webkit-linear-gradient(to left, #16222A , #3A6073); /* Chrome 10-25, Safari 5.1-6 */
         background: linear-gradient(to left, #16222A , #3A6073); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+*/
     }
     body, html {
@@ -23,13 +18,11 @@
       color: #99BBBB;
     }
   </style>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 
 <body>
 
-  <h2> githubTiddly </h2>
+  <h2> tiddlyGithub </h2>
   </p>
   <table>
     <tr>
@@ -41,20 +34,18 @@
   </table>  
   <hr>
   <div id="gtConsole">
-
   </div>
+  <h4> See <a href="https://github.com/netrc/tiddlyGithub"> https://github.com/netrc/tiddlyGithub </a> </h4>
   
 <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
   <script content="text/javascript">
-  // TODO add warn element to show warnings; auto clear after 4 seconds
   const gtItemName = "gtVal";
   const pNames = [ 'username', 'reponame', 'PAT' ];
 
   function initPage(){
       let g = JSON.parse(localStorage.getItem(gtItemName));
       if (g) {
-        //gtConsole(`got local storage: ${g.username} ${g.reponame} ${g.PAT}`)
-        pNames.forEach( p => {  // load up the GUI username, etc
+        pNames.forEach( p => {  // load up the GUI username, etc; if avail
           document.getElementById(p).value = g[p];
         } );
         doLoadWiki(g); 
@@ -70,6 +61,7 @@
     pNames.forEach( p => { // get the GUI username, etc
       let i = document.getElementById(p).value;
       if (!i || i==="") {
+        // TODO add warn element to show warnings; auto clear after 4 secs; rather than gtConsole
         gtConsole(`please enter ${p}`);
         return; // short-circuit return
       }
