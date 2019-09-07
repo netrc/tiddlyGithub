@@ -59,5 +59,6 @@ TODO
 * gitlab too?
 * get a tiddlyWiki favicon?
 * uses 'fetch()', not for IE; haven't tested on anything other than Chrome
+* I've seen 409 errors - "conflict" - no good answer but to (cut'n'paste changes if you can) re-download and re-edit.
 
 
