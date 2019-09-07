@@ -9,6 +9,9 @@ Uses built-in github saver to store tiddlyWiki index.html and a github pages hos
 ### TiddlyWiki
 
 * Go to https://tiddlywiki.com/ and save the index.html file to a local directory.
+
+### Github
+
 * You'll need to use git to commit/push that file to a repo at GitHub under your login name
 * At github, create a new repo and follow the directions to save the index.html as a file in the repo
 ** You'll probably want to make this a private repo if your tiddlyWiki is for private use
