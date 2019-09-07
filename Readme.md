@@ -14,9 +14,9 @@ Uses built-in github saver to store tiddlyWiki index.html and a github pages hos
 
 * You'll need to use git to commit/push that file to a repo at GitHub under your login name
 * At github, create a new repo and follow the directions to save the index.html as a file in the repo
-** You'll probably want to make this a private repo if your tiddlyWiki is for private use
-** you can add any other readme or other files if you want
-* Check https://github.com/<username>/<new repo> that your new repo looks fine and has the index.html file
+  * You'll probably want to make this a private repo if your tiddlyWiki is for private use
+  * you can add any other readme or other files if you want
+* Check https://github.com/-username-/-newrepo- that your new repo looks fine and has the index.html file
 
 Personal Access Tokens
 
@@ -24,16 +24,16 @@ You'll need a "PAT" in order to download and to store the GitHub index.html tidd
 
 * At GitHub, click on your user icon, select Settings, then Developer Settings
 * In the Personal Access Token page, "Create a new token"
-** any name
-** *You must select the 'repo' scope (permission)*  (i've forgotten to do this more than i care to admit)
+  * any name
+  * *You must select the 'repo' scope (permission)*  (i've forgotten to do this more than i care to admit)
 * Once created, immediately copy this string somewhere - the text of the PAT needs to be copied in to the tiddlyGithub downloader and to the GitHub save settings and the bookmarklet
 * Note that once you refresh the page, you aren't allowed to see the PAT clear-text. However, it is trivial to make new PATs as needed (and delete old PATS that aren't needed).
 
 ### tiddlyGithub
 
 * go to https://netrc.github.io/tiddlyGithub and enter your username, repo name, and the PAT, and click 'save'
-** these values are stored in browser local storage
-* code runningn in your browser will now download the index.html and run it
+  * these values are stored in browser local storage
+* code running in your browser will now download the index.html and run it
 
 ### GitHub Saver
 
