@@ -58,5 +58,6 @@ TODO
 * does the github repo have to be private? Is the saver PAT stored in the index.html file? (Seems like no, but I've been losing my saver PAT regularly)
 * gitlab too?
 * get a tiddlyWiki favicon?
+* uses 'fetch()', not for IE; haven't tested on anything other than Chrome
 
 
