@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta http-equiv=”Content-Type” content=”text/html; charset=utf-8″ />
+  <meta name="description" content="tiddlyWiki w/ Github">
+  <meta name="author" content="netrc">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> tiddlyGithub </title>
+
+  <style type="text/css">
+    body {
+        background: #446655; /* fallback for old browsers */
+        background: linear-gradient(to left, #16222A , #3A6073); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+*/
+    }
+    body, html {
+      font-family: sans-serif;
+      color: #9BB;
+    }
+    a:link, a:visited {
+      color: #ACC;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2> tiddlyGithub </h2>
+  </p>
+  <table>
+    <tr> 
+      <td> username </td>  
+      <td> repo name </td>  
+      <td> personal auth token </td>  
+    </tr>
+    <tr> 
+      <td> <input id='username' autofocus placeholder="username"> </td> 
+      <td> <input id='reponame' placeholder="repo name"> </td> 
+      <td> <input id='PAT' placeholder="PAT"> </td>  
+      <td> &nbsp; &nbsp; <button  onclick="saveAndGo()"> save </button> </td> </tr>
+  </table>  
+  <hr>
+  <div id="gtConsole">
+  </div>
+  <h4> See <a href="https://github.com/netrc/tiddlyGithub"> https://github.com/netrc/tiddlyGithub </a> </h4>
+  
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+  <script content="text/javascript">
+  const gtItemName = "gtVal";
+  const pNames = [ 'username', 'reponame', 'PAT' ];
+
+  function initPage(){
+      let g = JSON.parse(localStorage.getItem(gtItemName));
+      if (g) {
+        pNames.forEach( p => {  // load up the GUI username, etc; if avail
+          document.getElementById(p).value = g[p];
+        } );
+        doLoadWiki(g); 
+      } else {
+        //gtConsole('no local storage vals');
+      }
+  }
+  
+  function saveAndGo() {
+    console.log('saveAndGo');
+    //gtConsole('starting');
+    let g = {};
+    pNames.forEach( p => { // get the GUI username, etc
+      let i = document.getElementById(p).value;
+      if (!i || i==="") {
+        // TODO add warn element to show warnings; auto clear after 4 secs; rather than gtConsole
+        gtConsole(`please enter ${p}`);
+        return; // short-circuit return
+      }
+      g[p] = i;
+    } );
+    gtConsole(`saving ${g['username']}/${g['reponame']}`);
+    localStorage.setItem(gtItemName, JSON.stringify( g ) );
+    doLoadWiki(g);
+  }
+
+  function doRequest(url, opts) {
+    return new Promise ( (resolve, reject) => {
+      console.log(`dr: fetch ${url}`);
+      fetch(url, opts).then( response => {
+        if (response.status !== 200) {
+          gtConsole(`fetch problem ... Status Code: ${response.status}`);
+          reject(`fetch problem ... Status Code: ${response.status}`);
+        }
+        response.text().then( data => {
+          resolve(data);
+        });
+      }).catch( err => {
+        gtConsole(`other Fetch Error ${err}`);
+        reject(`Fetch Error ${err}`);
+      });
+    });
+  }
+
+  function doLoadWiki( g ) {
+    const contentsUrl = `https://api.github.com/repos/${g['username']}/${g['reponame']}/contents/`;
+    const contentsOpts = {
+      headers: {
+        'User-Agent': 'tiddly',
+        'Authorization': 'Basic ' + btoa(`${g['username']}:${g['PAT']}`),
+        'Accept': 'application/json'
+      }
+    };
+    gtConsole(`doLoadWiki for ${g['username']}...${contentsUrl}`);
+    doRequest(contentsUrl, contentsOpts).then( rawData => {
+      const contents = JSON.parse(rawData);
+      //gtConsole(`contents: ${rawData}`);
+      const indexInfo = contents.find( f => f.name==="index.html" );
+      if (!indexInfo) {
+        gtConsole('failed to find index.html');
+        return;
+      }
+      gtConsole(`found index.html size: ${indexInfo.size} sha: ${indexInfo.sha}`);
+      doRequest(indexInfo.git_url, contentsOpts).then( rawData => {
+        gtConsole(`...got raw response t: ${typeof(rawData)} length: ${rawData.length}  ${rawData.slice(0,32)}`);
+        const indexObj = JSON.parse(rawData);
+        gtConsole(`...got response object...`);
+        const bodyHTML = atob(indexObj.content);
+        gtConsole(`...body html ${bodyHTML.length}  ... ${bodyHTML.slice(0,48)}`);
+        document.close();
+        document.open();
+        document.write(bodyHTML);
+      }) // TODO catch
+    }).catch( err => {
+      gtConsole(`some error with the contents fetch`);
+    });
+  }
+
+  var gtConsoleEl;
+  function gtConsole( str ) {
+    gtConsoleEl = gtConsoleEl || document.getElementById("gtConsole");  // really one time init
+    gtConsoleEl.innerHTML += `<p> ${(new Date()).toISOString().slice(11,23)} ${str} </p>`;
+  }
+
+  // actual main entry point
+  if (document.readyState == 'loading') {  // loading yet, wait for the event
+    document.addEventListener('DOMContentLoaded', initPage);
+  } else {  // DOM is ready!
+   initPage();
+  }
+</script>  
+</body>
+</html>
+  
