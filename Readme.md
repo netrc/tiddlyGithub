@@ -4,12 +4,6 @@
 
 Uses built-in github saver to store tiddlyWiki index.html and a github pages hosted page that helps to download that page to your browser.
 
-
-## Details and Usage
-
-
-Click on the bookmarklet bookmark/button. 
-
 ## Step-by-Step How To
 
 ### TiddlyWiki
