@@ -6,11 +6,11 @@ Uses built-in github saver to store tiddlyWiki index.html and a github pages hos
 
 ## Step-by-Step How To
 
-### TiddlyWiki
+### TiddlyWiki - start up
 
 * Go to https://tiddlywiki.com/ and save the index.html file to a local directory.
 
-### Github
+### Github - repo and tokens
 
 * You'll need to use git to commit/push that file to a repo at GitHub under your login name
 * At github, create a new repo and follow the directions to save the index.html as a file in the repo
@@ -29,13 +29,14 @@ You'll need a "PAT" in order to download and to store the GitHub index.html tidd
 * Once created, immediately copy this string somewhere - the text of the PAT needs to be copied in to the tiddlyGithub downloader and to the GitHub save settings and the bookmarklet
 * Note that once you refresh the page, you aren't allowed to see the PAT clear-text. However, it is trivial to make new PATs as needed (and delete old PATS that aren't needed).
 
-### tiddlyGithub
+### tiddlyGithub - downloader
 
 * go to https://netrc.github.io/tiddlyGithub and enter your username, repo name, and the PAT, and click 'save'
   * these values are stored in browser local storage
 * code running in your browser will now download the index.html and run it
+* This will be the URL you use to download; bookmark this
 
-### GitHub Saver
+### tiddlyWiki - GitHub Saver
 
 * Once the tiddlyWiki is running, click on the settings icon and get to the 'Saving' panel, and the 'GitHub Saver' section
 * enter all the info as shown. (Note, you can use a different PAT, doesn't matter as long as it has 'repo' scope)
@@ -56,5 +57,6 @@ TODO
 * why does downloaded index.html github saver lose the PAT?
 * does the github repo have to be private? Is the saver PAT stored in the index.html file? (Seems like no, but I've been losing my saver PAT regularly)
 * gitlab too?
+* get a tiddlyWiki favicon?
 
 
